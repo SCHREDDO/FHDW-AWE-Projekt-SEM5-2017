@@ -1,6 +1,11 @@
 package de.fhdw.group3.server.bank.server.rest;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -17,6 +22,7 @@ import com.sun.jersey.spi.resource.Singleton;
 
 import de.fhdw.group3.server.bank.controller.TransactionController;
 import de.fhdw.group3.server.bank.helper.ReturnResponse;
+import de.fhdw.group3.server.bank.model.*;
 
 /**
  * @author Admin
@@ -29,6 +35,8 @@ public class RestResource {
 	
 	//public interfaces
 	
+	// # = auskomentiren @ = einkoentiren | zum testen
+	
 	/**
 	 * @param number
 	 * @return
@@ -37,7 +45,12 @@ public class RestResource {
 	@Path("/account/{number}/")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=utf-8"})
 	public Response sendAccountData(@PathParam("number") String number) {
-		ReturnResponse rr = TransactionController.getAccountInfo(number);
+		ReturnResponse rr = TransactionController.getAccountInfo(number); // #
+		
+		//List<Transaction> test = new ArrayList<Transaction>(); // @
+		//test.add(new Transaction(1, new Account("Test O1", "8888"), new Account("Test O2", "7777"), new BigDecimal(300.00), "Test T", new Date())); // @
+		//test.add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date())); // @
+		//ReturnResponse rr = new ReturnResponse(number, new Account(1, "Test Owner", "1111", test)); // @
 		
 		switch (rr.getError()) {
 		case "500": return Response.serverError().entity("Server side error.").build(); //500
@@ -61,8 +74,15 @@ public class RestResource {
 	@Path("/transaction")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response executeTransaction(@FormParam("senderNumber") String senderNumber, @FormParam("receiverNumber") String receiverNumber, @FormParam("amount") BigDecimal amount, @FormParam("reference") String reference) {
-
-		switch (TransactionController.newTransaction(senderNumber, receiverNumber, amount, reference)) {
+		String rr = TransactionController.newTransaction(senderNumber, receiverNumber, amount, reference); //#
+		
+		//rr = senderNumber; // @
+		//System.out.println(senderNumber); // @
+		//System.out.println(receiverNumber); // @
+		//System.out.println(amount); // @
+		//System.out.println(reference); // @	
+		
+		switch (rr) {
 		case "500": return Response.serverError().entity("Server side error.").build(); //500
 		case "400": return Response.status(Response.Status.BAD_REQUEST).build(); //400
 		case "404": return Response.status(Response.Status.NOT_FOUND).build(); //404
@@ -88,23 +108,41 @@ public class RestResource {
 		return Response.ok().build();
 	}
 	
-	/**
-	 * @return
-	 */
 	@POST
-	@Path("/account/all")
+	@Path("/account/update")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response getAllAccounts() {
+	public Response updateAccount(@FormParam("newOwner") String newOwner, @FormParam("number") String number) {
 		return Response.ok().build();
 	}
 	
 	/**
 	 * @return
 	 */
-	@POST
-	@Path("/transaction/all")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response getAllTransactions() {
+	@GET
+	@Path("/account/all")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getAllAccounts() {
+		ListAccount listAccount = new ListAccount();
+		listAccount.getAccounts().add(new Account("Test O1", "5555"));
+		listAccount.getAccounts().add(new Account("Test O2", "7777"));
+		listAccount.getAccounts().add(new Account("Test O3", "8888"));
+		
 		return Response.ok().build();
+	}
+	
+	/**
+	 * @return
+	 */
+	@GET
+	@Path("/transaction/all")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getAllTransactions() {
+		ListTransaction listTransaction = new ListTransaction();
+		listTransaction.getTransactions().add(new Transaction(1, new Account("Test O1", "8888"), new Account("Test O2", "7777"), new BigDecimal(300.00), "Test T", new Date()));
+		listTransaction.getTransactions().add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date()));
+		listTransaction.getTransactions().add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date()));
+		listTransaction.getTransactions().add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date()));
+		
+		return Response.ok(listTransaction).build();
 	}
 }

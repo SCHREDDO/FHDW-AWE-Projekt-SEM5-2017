@@ -12,7 +12,7 @@ import com.sun.jersey.api.json.JSONJAXBContext;
 @Provider
 public class JAXBContextResolver implements ContextResolver<JAXBContext> {
 
-	private static final Class<?>[] CLASSES = new Class[] { Account.class, Transaction.class };
+	private static final Class<?>[] CLASSES = new Class[] { Account.class, Transaction.class, ListAccount.class, ListTransaction.class };
 	private final JAXBContext context;
 
 	public JAXBContextResolver() throws Exception {
