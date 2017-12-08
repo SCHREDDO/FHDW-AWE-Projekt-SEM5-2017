@@ -7,7 +7,16 @@ import java.util.List;
 import de.fhdw.group3.server.bank.model.Account;
 import de.fhdw.group3.server.bank.model.Transaction;
 
+/**
+ * @author Admin
+ *
+ */
 public class ResultToObjectData {
+	
+	/**
+	 * @param rs
+	 * @return
+	 */
 	public static List<Account> resultToAccount(ResultSet rs) {
 		List<Account> accList = new ArrayList<Account>();
 		
@@ -22,6 +31,10 @@ public class ResultToObjectData {
 		return accList;
 	}
 	
+	/**
+	 * @param rs
+	 * @return
+	 */
 	public static List<Transaction> resultToTransaction(ResultSet rs) {
 		List<Transaction> traList = new ArrayList<Transaction>();
 		

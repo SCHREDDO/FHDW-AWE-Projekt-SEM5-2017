@@ -18,11 +18,21 @@ import com.sun.jersey.spi.resource.Singleton;
 import de.fhdw.group3.server.bank.controller.TransactionController;
 import de.fhdw.group3.server.bank.helper.ReturnResponse;
 
+/**
+ * @author Admin
+ *
+ */
 @Path("/")
 @Singleton
 public class RestResource {
 	private Logger logger = Logger.getLogger(getClass());
-
+	
+	//public interfaces
+	
+	/**
+	 * @param number
+	 * @return
+	 */
 	@GET
 	@Path("/account/{number}/")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=utf-8"})
@@ -40,6 +50,13 @@ public class RestResource {
 		return Response.ok(rr.getAccount()).build();
 	}
 	
+	/**
+	 * @param senderNumber
+	 * @param receiverNumber
+	 * @param amount
+	 * @param reference
+	 * @return
+	 */
 	@POST
 	@Path("/transaction")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -54,6 +71,40 @@ public class RestResource {
 			break;
 		}
 
+		return Response.ok().build();
+	}
+	
+	//Angular interfaces
+	
+	/**
+	 * @param owner
+	 * @param startAmount
+	 * @return
+	 */
+	@POST
+	@Path("/account/new")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response newAccount(@FormParam("owner") String owner, @FormParam("startAmount") BigDecimal startAmount) {
+		return Response.ok().build();
+	}
+	
+	/**
+	 * @return
+	 */
+	@POST
+	@Path("/account/all")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response getAllAccounts() {
+		return Response.ok().build();
+	}
+	
+	/**
+	 * @return
+	 */
+	@POST
+	@Path("/transaction/all")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response getAllTransactions() {
 		return Response.ok().build();
 	}
 }

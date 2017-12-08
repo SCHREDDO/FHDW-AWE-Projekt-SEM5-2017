@@ -5,8 +5,13 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * @author Admin
+ *
+ */
 @XmlRootElement
 public class Account {
+	
 	private int id;
 	private String owner;
 	private String number;
@@ -37,6 +42,9 @@ public class Account {
 		this.transactions = transactions;
 	}
 
+	/**
+	 * 
+	 */
 	public Account() {
 		setId(0);
 		setOwner("");
@@ -44,11 +52,21 @@ public class Account {
 		setTransactions(new ArrayList<Transaction>());
 	}
 	
+	/**
+	 * @param owner
+	 * @param number
+	 */
 	public Account(String owner, String number) {
 		setOwner(owner);
 		setNumber(number);
 	}
 
+	/**
+	 * @param id
+	 * @param owner
+	 * @param number
+	 * @param transactions
+	 */
 	public Account(int id, String owner, String number, List<Transaction> transactions) {
 		setId(id);
 		setOwner(owner);

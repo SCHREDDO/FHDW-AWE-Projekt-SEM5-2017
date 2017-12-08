@@ -8,7 +8,12 @@ import de.fhdw.group3.server.bank.helper.*;
 import de.fhdw.group3.server.bank.model.*;
 import de.fhdw.group3.server.bank.database.*;
 
+/**
+ * @author Admin
+ *
+ */
 public class TransactionController {
+	
 	public static String newAccount() {
 		return "200";
 	}
@@ -17,6 +22,10 @@ public class TransactionController {
 		return "200";
 	}
 	
+	/**
+	 * @param number
+	 * @return
+	 */
 	public static ReturnResponse getAccountInfo(String number) {
 		//500 (Fehler auf dem Server aufgetreten (z.B. SQL Exception))
 		//400 (Daten mit falschem Format etc., sonstige Client-seitige Fehler)
@@ -44,6 +53,13 @@ public class TransactionController {
 		return new ReturnResponse("200", acc);
 	}
 	
+	/**
+	 * @param senderNumber
+	 * @param receiverNumber
+	 * @param amount
+	 * @param reference
+	 * @return
+	 */
 	public static String newTransaction(String senderNumber, String receiverNumber, BigDecimal amount, String reference) {
 		//500 (Fehler auf dem Server aufgetreten (z.B. SQL Exception))
 		//400 (Daten mit falschem Format etc., sonstige Client-seitige Fehler)
@@ -70,3 +86,10 @@ public class TransactionController {
 		return "200";
 	}
 }
+
+/*
+	synchronized (DemoClass.class)
+	{
+	    //other thread safe code
+	}
+*/

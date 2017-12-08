@@ -1,5 +1,6 @@
 package de.fhdw.group3.server.bank.database;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,6 +13,10 @@ import de.fhdw.group3.server.bank.helper.ResultToObjectData;
 import de.fhdw.group3.server.bank.model.Account;
 import de.fhdw.group3.server.bank.model.Transaction;
 
+/**
+ * @author Admin
+ *
+ */
 public class DBAccessJDBCSQLite {
 
 	private String url = "jdbc:sqlite:/SQLite/database";
@@ -30,10 +35,16 @@ public class DBAccessJDBCSQLite {
 		this.dB = dB;
 	}
 
+	/**
+	 * 
+	 */
 	public DBAccessJDBCSQLite() {
 
 	}
 
+	/**
+	 * @return
+	 */
 	public Boolean connectTODB() {
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -48,6 +59,9 @@ public class DBAccessJDBCSQLite {
 		return true;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean disconnectFROMDB() {
 		try {
 			getDB().close();
@@ -57,6 +71,10 @@ public class DBAccessJDBCSQLite {
 		return true;
 	}
 
+	/**
+	 * @param autoCommit
+	 * @return
+	 */
 	public boolean setAutoCommit(boolean autoCommit) {
 		try {
 			getDB().setAutoCommit(autoCommit);
@@ -67,6 +85,9 @@ public class DBAccessJDBCSQLite {
 		return true;
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean commit() {
 		try {
 			getDB().commit();
@@ -77,6 +98,10 @@ public class DBAccessJDBCSQLite {
 		return true;
 	}
 
+	/**
+	 * @param number
+	 * @return
+	 */
 	public Account getAccount(String number) {
 		Account acc = new Account();
 		String sql = "Select * FROM account WHERE number = ?";
@@ -95,6 +120,9 @@ public class DBAccessJDBCSQLite {
 		return acc;
 	}
 
+	/**
+	 * @return
+	 */
 	public List<Account> getAccounts() {
 		List<Account> accList = new ArrayList<Account>();
 		String sql = "Select * FROM account";
@@ -115,6 +143,10 @@ public class DBAccessJDBCSQLite {
 		return accList;
 	}
 
+	/**
+	 * @param id
+	 * @return
+	 */
 	public Transaction getTransaction(int id) {
 		Transaction tra = new Transaction();
 		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, as.owner, as.number, ar.owner, ar.number FROM transaction t, account as, account ar WHERE (as.id = t.account_id_sender AND ar.id = t.account_id_receiver) AND t.id = ?";
@@ -133,6 +165,9 @@ public class DBAccessJDBCSQLite {
 		return tra;
 	}
 
+	/**
+	 * @return
+	 */
 	public List<Transaction> getTransactions() {
 		List<Transaction> traList = new ArrayList<Transaction>();
 		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, as.owner, as.number, ar.owner, ar.number FROM transaction t, account as, account ar WHERE (as.id = t.account_id_sender AND ar.id = t.account_id_receiver)";
@@ -153,6 +188,10 @@ public class DBAccessJDBCSQLite {
 		return traList;
 	}
 
+	/**
+	 * @param id
+	 * @return
+	 */
 	public List<Transaction> getTransactionsFromAccount(int id) {
 		List<Transaction> traList = new ArrayList<Transaction>();
 		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, as.owner, as.number, ar.owner, ar.number FROM transaction t, account as, account ar WHERE (as.id = t.account_id_sender AND ar.id = t.account_id_receiver) AND (t.account_id_sender = ? OR t.account_id_receiver = ?)";
@@ -176,6 +215,35 @@ public class DBAccessJDBCSQLite {
 		return traList;
 	}
 	
+	/**
+	 * @param number
+	 * @return
+	 */
+	public BigDecimal getAccountBalance(String number) {
+		BigDecimal accountBalance = new BigDecimal(0.0);;
+		String sql = "Select as balance";
+		PreparedStatement statement;
+		
+		try {			
+			statement = getDB().prepareStatement(sql);
+			
+			ResultSet rs = statement.executeQuery();
+			
+			while(rs.next()) {	
+				accountBalance = new BigDecimal(rs.getString(1));
+			}
+		} 
+		catch (SQLException e) {
+			System.out.println(e);
+		}
+		
+		return accountBalance;
+	}
+	
+	/**
+	 * @param account
+	 * @return
+	 */
 	public boolean newAccount(Account account) {
 		String sql = "INSERT INTO account (id, owner, number) VALUES (?, ?, ?)";
 		PreparedStatement statement;
@@ -195,6 +263,10 @@ public class DBAccessJDBCSQLite {
 		return true;
 	}
 	
+	/**
+	 * @param transaction
+	 * @return
+	 */
 	public boolean newTransaction(Transaction transaction) {
 		String sql = "INSERT INTO Transaction (id, account_id_sender, account_id_receiver, amount, reference, transactionDate) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement statement;
@@ -217,6 +289,10 @@ public class DBAccessJDBCSQLite {
 		return true;
 	}
 
+	/**
+	 * @param account
+	 * @return
+	 */
 	public boolean updateAccount(Account account) {
 		String sql = "UPDATE account SET owner = ?, number = ? WHERE id = ?";
 		PreparedStatement statement;
@@ -236,6 +312,10 @@ public class DBAccessJDBCSQLite {
 		return true;
 	}
 
+	/**
+	 * @param transaction
+	 * @return
+	 */
 	public boolean updateTransaction(Transaction transaction) {
 		String sql = "UPDATE transaction SET account_id_sender = ?, account_id_receiver = ?, amount = ?, reference = ?, transactionDate = ? WHERE id = ?";
 		PreparedStatement statement;

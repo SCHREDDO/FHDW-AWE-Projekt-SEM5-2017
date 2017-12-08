@@ -5,8 +5,13 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * @author Admin
+ *
+ */
 @XmlRootElement
 public class Transaction {
+	
 	private int id;
 	private Account sender;
 	private Account receiver;
@@ -51,6 +56,9 @@ public class Transaction {
 		this.transactionDate = transactionDate;
 	}
 
+	/**
+	 * 
+	 */
 	public Transaction() {
 		setId(0);
 		setSender(new Account());
@@ -60,6 +68,14 @@ public class Transaction {
 		setTransactionDate(new Date());
 	}
 
+	/**
+	 * @param id
+	 * @param sender
+	 * @param receiver
+	 * @param amount
+	 * @param reference
+	 * @param transactionDate
+	 */
 	public Transaction(int id, Account sender,Account receiver, BigDecimal amount, String reference, Date transactionDate) {
 		setId(id);
 		setSender(sender);
