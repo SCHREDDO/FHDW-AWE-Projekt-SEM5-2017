@@ -39,14 +39,23 @@ public class TransactionController {
 		
 		DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
 		db.connectTODB();
-		db.setAutoCommit(false);
 		
 		acc = db.getAccount(number);
+		if (db.isSQLException()) {
+			return new ReturnResponse("500", acc);
+		}
+
 		if (acc.getId() == 0) {
 			return new ReturnResponse("404", acc);
 		}
 		
 		traList = db.getTransactionsFromAccount(acc.getId());
+		
+		if (db.isSQLException()) {
+			return new ReturnResponse("500", acc);
+		}
+		
+		db.disconnectFROMDB();
 		
 		acc.setTransactions(traList);
 		
@@ -68,20 +77,85 @@ public class TransactionController {
 		Transaction tra = new Transaction();
 		Account accSender = new Account();
 		Account accReceiver = new Account();
+		BigDecimal minAmount = new BigDecimal(0.00);
+		BigDecimal senderAmount;
+		
+		if (senderNumber.length() != 4 || !senderNumber.matches("[0-9]+")) {
+			System.out.println("1");
+			return "400";
+		}
+		
+		if (receiverNumber.length() != 4 || !receiverNumber.matches("[0-9]+")) {
+			System.out.println("2");
+			return "400";
+		}
+		
+		if (senderNumber.equals(receiverNumber)) {
+			System.out.println("4");
+			return "400";
+		}
+		
+		if (!(1 == amount.compareTo(minAmount))) {
+			System.out.println("3");
+			return "412";
+		}
 		
 		DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
 		db.connectTODB();
-		db.setAutoCommit(false);
 		
 		accSender = db.getAccount(senderNumber);
+		if (db.isSQLException()) {
+			System.out.println("5");
+			return "500";
+		}
+		
+		if (accSender.getId() == 0) {
+			return "404";
+		}
+		
 		accReceiver = db.getAccount(receiverNumber);
+		if (db.isSQLException()) {
+			System.out.println("6");
+			return "500";
+		}
+		
+		if (accReceiver.getId() == 0) {
+			return "404";
+		}
+		
+		senderAmount = db.getAccountBalance(accSender.getNumber());
+		if (db.isSQLException()) {
+			System.out.println("7");
+			return "500";
+		}
+		System.out.println("a1 " + amount);
+		System.out.println("a2 " + senderAmount);
+		
+		System.out.println("t1 " + (1 == amount.compareTo(senderAmount)));
+		System.out.println("t2 " + !(0 == amount.compareTo(senderAmount)));
+		System.out.println("t3 " + !accSender.getOwner().equals("BANK"));
+		
+		if (1 == amount.compareTo(senderAmount) && !accSender.getOwner().equals("BANK")) {
+			System.out.println("8");
+			return "412";
+		}
 		
 		tra.setSender(accSender);
 		tra.setReceiver(accReceiver);
 		tra.setAmount(amount);
 		tra.setReference(reference);
-		
+
 		db.newTransaction(tra);
+		if (db.isSQLException()) {
+			System.out.println("9");
+			return "500";
+		}
+		
+		System.out.println("S = " + db.getAccountBalance("1001"));
+		System.out.println("R = " + db.getAccountBalance("1002"));
+		
+		db.disconnectFROMDB();
+		System.out.println("10");
 		
 		return "200";
 	}

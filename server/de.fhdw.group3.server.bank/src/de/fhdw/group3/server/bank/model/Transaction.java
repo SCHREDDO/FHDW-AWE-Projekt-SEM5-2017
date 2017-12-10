@@ -1,9 +1,12 @@
 package de.fhdw.group3.server.bank.model;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * @author Admin
@@ -17,8 +20,9 @@ public class Transaction {
 	private Account receiver;
 	private BigDecimal amount;
 	private String reference;
-	private Date transactionDate;
+	private String transactionDate;
 
+	@XmlTransient
 	public int getId() {
 		return id;
 	}
@@ -49,10 +53,10 @@ public class Transaction {
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
-	public Date getTransactionDate() {
+	public String getTransactionDate() {
 		return transactionDate;
 	}
-	public void setTransactionDate(Date transactionDate) {
+	public void setTransactionDate(String transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 
@@ -60,12 +64,15 @@ public class Transaction {
 	 * 
 	 */
 	public Transaction() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		Date date = new Date();
+		
 		setId(0);
 		setSender(new Account());
 		setReceiver(new Account());
 		setAmount(new BigDecimal("0.0"));
 		setReference("");
-		setTransactionDate(new Date());
+		setTransactionDate(dateFormat.format(date));
 	}
 
 	/**
@@ -77,11 +84,13 @@ public class Transaction {
 	 * @param transactionDate
 	 */
 	public Transaction(int id, Account sender,Account receiver, BigDecimal amount, String reference, Date transactionDate) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		
 		setId(id);
 		setSender(sender);
 		setReceiver(receiver);
 		setAmount(amount);
 		setReference(reference);
-		setTransactionDate(transactionDate);
+		setTransactionDate(dateFormat.format(transactionDate));
 	}
 }

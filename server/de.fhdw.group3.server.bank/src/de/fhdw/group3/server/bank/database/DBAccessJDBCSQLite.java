@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class DBAccessJDBCSQLite {
 
 	private String url = "jdbc:sqlite:/SQLite/database";
 	private Connection dB = null;
+	private boolean isSQLException;
 
 	public String getUrl() {
 		return url;
@@ -34,12 +37,18 @@ public class DBAccessJDBCSQLite {
 	public void setDB(Connection dB) {
 		this.dB = dB;
 	}
-
+	public boolean isSQLException() {
+		return isSQLException;
+	}
+	public void setSQLException(boolean isSQLException) {
+		this.isSQLException = isSQLException;
+	}
+	
 	/**
 	 * 
 	 */
 	public DBAccessJDBCSQLite() {
-
+		setSQLException(false);
 	}
 
 	/**
@@ -52,7 +61,8 @@ public class DBAccessJDBCSQLite {
 
 			System.out.println("Connected to database.");
 		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("connectTODB() | " + e);
 			return false;
 		}
 
@@ -66,7 +76,8 @@ public class DBAccessJDBCSQLite {
 		try {
 			getDB().close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			setSQLException(true);
+			System.out.println("disconnectFROMDB() | " + e);
 		}
 		return true;
 	}
@@ -79,6 +90,8 @@ public class DBAccessJDBCSQLite {
 		try {
 			getDB().setAutoCommit(autoCommit);
 		} catch (SQLException e) {
+			setSQLException(true);
+			System.out.println("setAutoCommit(boolean " + autoCommit + ") | " + e);
 			return false;
 		}
 
@@ -92,6 +105,8 @@ public class DBAccessJDBCSQLite {
 		try {
 			getDB().commit();
 		} catch (SQLException e) {
+			setSQLException(true);
+			System.out.println("commit() | " + e);
 			return false;
 		}
 
@@ -114,7 +129,8 @@ public class DBAccessJDBCSQLite {
 			acc = ResultToObjectData.resultToAccount(statement.executeQuery()).get(0);
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("getAccount(String " + number + ") | " + e);
 		}
 
 		return acc;
@@ -137,7 +153,8 @@ public class DBAccessJDBCSQLite {
 			}
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("getAccounts() | " + e);
 		}
 
 		return accList;
@@ -149,7 +166,7 @@ public class DBAccessJDBCSQLite {
 	 */
 	public Transaction getTransaction(int id) {
 		Transaction tra = new Transaction();
-		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, as.owner, as.number, ar.owner, ar.number FROM transaction t, account as, account ar WHERE (as.id = t.account_id_sender AND ar.id = t.account_id_receiver) AND t.id = ?";
+		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, acs.owner, acs.number, acr.owner, acr.number FROM banktransaction t, account acs, account acr WHERE (acs.id = t.account_id_sender AND acr.id = t.account_id_receiver) AND t.id = ?";
 		PreparedStatement statement;
 		
 		try {			
@@ -159,7 +176,8 @@ public class DBAccessJDBCSQLite {
 			tra = ResultToObjectData.resultToTransaction(statement.executeQuery()).get(0);
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("getTransaction(int " + id + ") | " + e);
 		}
 		
 		return tra;
@@ -170,19 +188,18 @@ public class DBAccessJDBCSQLite {
 	 */
 	public List<Transaction> getTransactions() {
 		List<Transaction> traList = new ArrayList<Transaction>();
-		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, as.owner, as.number, ar.owner, ar.number FROM transaction t, account as, account ar WHERE (as.id = t.account_id_sender AND ar.id = t.account_id_receiver)";
+		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, acs.owner, acs.number, acr.owner, acr.number FROM banktransaction t, account acs, account acr WHERE (acs.id = t.account_id_sender AND acr.id = t.account_id_receiver)";
 		PreparedStatement statement;
 		
 		try {			
 			statement = getDB().prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
 			
-			while(rs.next()) {	
-				traList = ResultToObjectData.resultToTransaction(rs);
-			}
+			traList = ResultToObjectData.resultToTransaction(rs);
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("getTransactions() | " + e);
 		}
 
 		return traList;
@@ -194,7 +211,8 @@ public class DBAccessJDBCSQLite {
 	 */
 	public List<Transaction> getTransactionsFromAccount(int id) {
 		List<Transaction> traList = new ArrayList<Transaction>();
-		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, as.owner, as.number, ar.owner, ar.number FROM transaction t, account as, account ar WHERE (as.id = t.account_id_sender AND ar.id = t.account_id_receiver) AND (t.account_id_sender = ? OR t.account_id_receiver = ?)";
+		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, acs.owner, acs.number, acr.owner, acr.number FROM banktransaction t, account acs, account acr WHERE (acs.id = t.account_id_sender AND acr.id = t.account_id_receiver) AND (t.account_id_sender = ? OR t.account_id_receiver = ?) ORDER BY t.id DESC";
+
 		PreparedStatement statement;
 		
 		try {			
@@ -204,12 +222,13 @@ public class DBAccessJDBCSQLite {
 			
 			ResultSet rs = statement.executeQuery();
 			
-			while(rs.next()) {	
+			while(rs.next()) {
 				traList = ResultToObjectData.resultToTransaction(rs);
 			}
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("getTransactionsFromAccount(int " + id + ") | " + e);
 		}
 
 		return traList;
@@ -221,11 +240,14 @@ public class DBAccessJDBCSQLite {
 	 */
 	public BigDecimal getAccountBalance(String number) {
 		BigDecimal accountBalance = new BigDecimal(0.0);;
-		String sql = "Select as balance";
+		String sql = "Select ((Select case when SUM(t.amount) > 0 then SUM(t.amount) else 0 end FROM banktransaction t, account a WHERE t.account_id_receiver = a.id AND a.number = ?) - (Select case when SUM(t.amount) > 0 then SUM(t.amount) else 0 end FROM banktransaction t, account a WHERE t.account_id_sender = a.id AND a.number = ?)) as balance FROM account WHERE number = ?";
 		PreparedStatement statement;
 		
 		try {			
 			statement = getDB().prepareStatement(sql);
+			statement.setString(1, number);
+			statement.setString(2, number);
+			statement.setString(3, number);
 			
 			ResultSet rs = statement.executeQuery();
 			
@@ -234,6 +256,7 @@ public class DBAccessJDBCSQLite {
 			}
 		} 
 		catch (SQLException e) {
+			setSQLException(true);
 			System.out.println(e);
 		}
 		
@@ -245,7 +268,7 @@ public class DBAccessJDBCSQLite {
 	 * @return
 	 */
 	public boolean newAccount(Account account) {
-		String sql = "INSERT INTO account (id, owner, number) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO account (owner, number) VALUES (?, ?)";
 		PreparedStatement statement;
 		
 		try {			
@@ -254,9 +277,12 @@ public class DBAccessJDBCSQLite {
 			statement.setInt(1, account.getId());
 			statement.setString(2, account.getOwner());
 			statement.setString(3, account.getNumber());
+			
+			statement.execute();
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("newAccount(Account " + account + ") | " + e);
 			return false;
 		}
 		
@@ -268,21 +294,25 @@ public class DBAccessJDBCSQLite {
 	 * @return
 	 */
 	public boolean newTransaction(Transaction transaction) {
-		String sql = "INSERT INTO Transaction (id, account_id_sender, account_id_receiver, amount, reference, transactionDate) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO banktransaction (account_id_sender, account_id_receiver, amount, reference, transactionDate) VALUES (?, ?, ?, ?, ?)";
 		PreparedStatement statement;
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		
-		try {			
+		try {
+			System.out.println("|1");
 			statement = getDB().prepareStatement(sql);
+
+			statement.setInt(1, transaction.getSender().getId());
+			statement.setInt(2, transaction.getReceiver().getId());
+			statement.setString(3, transaction.getAmount().toString());
+			statement.setString(4, transaction.getReference());
+			statement.setString(5, transaction.getTransactionDate());
 			
-			statement.setInt(1, transaction.getId());
-			statement.setInt(2, transaction.getSender().getId());
-			statement.setInt(3, transaction.getReceiver().getId());
-			statement.setBigDecimal(4, transaction.getAmount());
-			statement.setString(5, transaction.getReference());
-			statement.setDate(6, (java.sql.Date) transaction.getTransactionDate());
+			statement.execute();
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("newTransaction(Transaction " + transaction + ") | " + e);
 			return false;
 		}
 		
@@ -303,9 +333,12 @@ public class DBAccessJDBCSQLite {
 			statement.setString(1, account.getOwner());
 			statement.setString(2, account.getNumber());
 			statement.setInt(3, account.getId());
+			
+			statement.execute();
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("updateAccount(Account " + account + ") | " + e);
 			return false;
 		}
 		
@@ -317,21 +350,25 @@ public class DBAccessJDBCSQLite {
 	 * @return
 	 */
 	public boolean updateTransaction(Transaction transaction) {
-		String sql = "UPDATE transaction SET account_id_sender = ?, account_id_receiver = ?, amount = ?, reference = ?, transactionDate = ? WHERE id = ?";
+		String sql = "UPDATE banktransaction SET account_id_sender = ?, account_id_receiver = ?, amount = ?, reference = ?, transactionDate = ? WHERE id = ?";
 		PreparedStatement statement;
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		
 		try {			
 			statement = getDB().prepareStatement(sql);
 			
 			statement.setInt(1, transaction.getSender().getId());
 			statement.setInt(2, transaction.getReceiver().getId());
-			statement.setBigDecimal(3, transaction.getAmount());
+			statement.setString(3, transaction.getAmount().toString());
 			statement.setString(4, transaction.getReference());
-			statement.setDate(5, (java.sql.Date) transaction.getTransactionDate());
+			statement.setString(5, transaction.getTransactionDate());
 			statement.setInt(6, transaction.getId());
+			
+			statement.execute();
 		} 
 		catch (SQLException e) {
-			System.out.println(e);
+			setSQLException(true);
+			System.out.println("updateTransaction(Transaction " + transaction + ") | " + e);
 			return false;
 		}
 		

@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import com.sun.jersey.spi.resource.Singleton;
 
 import de.fhdw.group3.server.bank.controller.TransactionController;
+import de.fhdw.group3.server.bank.database.DBAccessJDBCSQLite;
 import de.fhdw.group3.server.bank.helper.ReturnResponse;
 import de.fhdw.group3.server.bank.model.*;
 
@@ -60,6 +61,7 @@ public class RestResource {
 			break;
 		}
 		
+		
 		return Response.ok(rr.getAccount()).build();
 	}
 	
@@ -73,14 +75,44 @@ public class RestResource {
 	@POST
 	@Path("/transaction")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response executeTransaction(@FormParam("senderNumber") String senderNumber, @FormParam("receiverNumber") String receiverNumber, @FormParam("amount") BigDecimal amount, @FormParam("reference") String reference) {
-		String rr = TransactionController.newTransaction(senderNumber, receiverNumber, amount, reference); //#
+	public Response executeTransaction(@FormParam("senderNumber") String senderNumber, @FormParam("receiverNumber") String receiverNumber, @FormParam("amount") String amount, @FormParam("reference") String reference) {
+		System.out.println("================="); // @
+		System.out.println("================="); // @
+		System.out.println("================="); // @
+		System.out.println("================="); // @
 		
-		//rr = senderNumber; // @
-		//System.out.println(senderNumber); // @
-		//System.out.println(receiverNumber); // @
-		//System.out.println(amount); // @
-		//System.out.println(reference); // @	
+		System.out.println("= " + senderNumber); // @
+		System.out.println("= " + receiverNumber); // @
+		System.out.println("= " + amount); // @
+		System.out.println("= " + reference); // @
+		String testString = amount;
+		BigDecimal bigDecimal;
+		
+		System.out.println("T= " + amount.length());
+		System.out.println("T= " + (((amount.indexOf('.') == (amount.length() - 3) && amount.length() >= 4)) || amount.indexOf('.') == -1 ));
+		System.out.println("T= " + (testString.matches("[0-9]+")));
+		
+		if (senderNumber.equals("") || receiverNumber.equals("") || amount.equals("") || reference.equals("")) {
+			System.out.println("#1"); // @
+			return Response.status(Response.Status.BAD_REQUEST).build(); //400
+		}
+		
+		if ((((amount.indexOf('.') == (amount.length() - 3) && amount.length() >= 4)) || amount.indexOf('.') == -1 ) && (testString.matches("[.0-9]+"))) {
+			bigDecimal = new BigDecimal(amount);
+		} else {
+			System.out.println("#2"); // @
+			return Response.status(Response.Status.BAD_REQUEST).build(); //400
+		}
+		
+		System.out.println("abc " + reference.matches("[ a-zA-Z0-9]*")); // @
+		if (!reference.matches("[ a-zA-Z0-9]*")) {
+			System.out.println("#3"); // @
+			return Response.status(Response.Status.BAD_REQUEST).build(); //400
+		}
+		
+		
+		
+		String rr = TransactionController.newTransaction(senderNumber, receiverNumber, bigDecimal, reference); //#
 		
 		switch (rr) {
 		case "500": return Response.serverError().entity("Server side error.").build(); //500
@@ -105,6 +137,9 @@ public class RestResource {
 	@Path("/account/new")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response newAccount(@FormParam("owner") String owner, @FormParam("startAmount") BigDecimal startAmount) {
+		System.out.println(owner);
+		System.out.println(startAmount);
+		
 		return Response.ok().build();
 	}
 	
@@ -112,6 +147,9 @@ public class RestResource {
 	@Path("/account/update")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response updateAccount(@FormParam("newOwner") String newOwner, @FormParam("number") String number) {
+		System.out.println(newOwner);
+		System.out.println(number);
+		
 		return Response.ok().build();
 	}
 	

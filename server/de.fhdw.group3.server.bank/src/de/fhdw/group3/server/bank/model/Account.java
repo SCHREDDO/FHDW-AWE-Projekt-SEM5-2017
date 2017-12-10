@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * @author Admin
@@ -17,6 +18,7 @@ public class Account {
 	private String number;
 	private List<Transaction> transactions;
 
+	@XmlTransient
 	public int getId() {
 		return id;
 	}
