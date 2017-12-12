@@ -7,8 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.accessibility.internal.resources.accessibility;
-
 import de.fhdw.group3.server.bank.model.Account;
 import de.fhdw.group3.server.bank.model.Transaction;
 

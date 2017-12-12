@@ -296,7 +296,6 @@ public class DBAccessJDBCSQLite {
 	public boolean newTransaction(Transaction transaction) {
 		String sql = "INSERT INTO banktransaction (account_id_sender, account_id_receiver, amount, reference, transactionDate) VALUES (?, ?, ?, ?, ?)";
 		PreparedStatement statement;
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		
 		try {
 			System.out.println("|1");
@@ -352,7 +351,6 @@ public class DBAccessJDBCSQLite {
 	public boolean updateTransaction(Transaction transaction) {
 		String sql = "UPDATE banktransaction SET account_id_sender = ?, account_id_receiver = ?, amount = ?, reference = ?, transactionDate = ? WHERE id = ?";
 		PreparedStatement statement;
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		
 		try {			
 			statement = getDB().prepareStatement(sql);

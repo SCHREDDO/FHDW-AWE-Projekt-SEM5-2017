@@ -1,10 +1,7 @@
 package de.fhdw.group3.server.bank.server.rest;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -21,9 +18,11 @@ import org.apache.log4j.Logger;
 import com.sun.jersey.spi.resource.Singleton;
 
 import de.fhdw.group3.server.bank.controller.TransactionController;
-import de.fhdw.group3.server.bank.database.DBAccessJDBCSQLite;
 import de.fhdw.group3.server.bank.helper.ReturnResponse;
-import de.fhdw.group3.server.bank.model.*;
+import de.fhdw.group3.server.bank.model.Account;
+import de.fhdw.group3.server.bank.model.ListAccount;
+import de.fhdw.group3.server.bank.model.ListTransaction;
+import de.fhdw.group3.server.bank.model.Transaction;
 
 /**
  * @author Admin
@@ -158,23 +157,25 @@ public class RestResource {
 	 */
 	@GET
 	@Path("/account/all")
-	@Produces({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON + ";charset=utf-8"})
 	public Response getAllAccounts() {
 		ListAccount listAccount = new ListAccount();
 		listAccount.getAccounts().add(new Account("Test O1", "5555"));
 		listAccount.getAccounts().add(new Account("Test O2", "7777"));
 		listAccount.getAccounts().add(new Account("Test O3", "8888"));
 		
-		return Response.ok().build();
+		return Response.ok(listAccount).build();
 	}
 	
 	/**
 	 * @return
 	 */
 	@GET
-	@Path("/transaction/all")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllTransactions() {
+	@Path("/transaction/all/{number}")
+	@Produces({ MediaType.APPLICATION_JSON + ";charset=utf-8"})
+	public Response getAllTransactions(@PathParam("number") String number) {
+		System.out.println(number);
+		
 		ListTransaction listTransaction = new ListTransaction();
 		listTransaction.getTransactions().add(new Transaction(1, new Account("Test O1", "8888"), new Account("Test O2", "7777"), new BigDecimal(300.00), "Test T", new Date()));
 		listTransaction.getTransactions().add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date()));
