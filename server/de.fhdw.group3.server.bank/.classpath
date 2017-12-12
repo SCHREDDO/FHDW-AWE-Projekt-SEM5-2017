@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="lib/asm-3.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-all-1.9.11.jar"/>
 	<classpathentry kind="lib" path="lib/jetty-all-8.1.9.v20130131.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Admin/Desktop/sqlite-jdbc-3.7.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jessy/Downloads/FHDW-AWE-Projekt-SEM5-2017-master/FHDW-AWE-Projekt-SEM5-2017-master/database/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
