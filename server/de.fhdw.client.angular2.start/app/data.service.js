@@ -16,13 +16,22 @@ var DataService = (function () {
     function DataService(http) {
         this.http = http;
     }
-    DataService.prototype.getData = function () {
-        return this.http.get('http://localhost:9998/rest/data').map(function (response) { return response.json(); });
+    DataService.prototype.getAccouts = function () {
+        return this.http.get('http://localhost:9998/rest/account/all/').map(function (response) { return response.json(); });
     };
-    DataService.prototype.postData = function (data) {
+    DataService.prototype.getTransactions = function (number) {
+        return this.http.get('http://localhost:9998/rest/transaction/all/' + number).map(function (response) { return response.json(); });
+    };
+    DataService.prototype.sendNewAccount = function (newAccountOwner, newAccountstartAmount) {
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded');
-        this.http.post('http://localhost:9998/rest/data', "info=" + data.info, { headers: headers })
+        this.http.post('http://localhost:9998/rest/account/new', "ownerStartAmount=" + (newAccountOwner + "-" + newAccountstartAmount), { headers: headers })
+            .subscribe(function (response) { return console.log("OK"); }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("PostRequest sent"); });
+    };
+    DataService.prototype.sendUpdateAccout = function (number, newOwner) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        this.http.post('http://localhost:9998/rest/account/update', "newOwnerNumber=" + (newOwner + "-" + number), { headers: headers })
             .subscribe(function (response) { return console.log("OK"); }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("PostRequest sent"); });
     };
     DataService = __decorate([

@@ -31,9 +31,7 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <li><a>HTML</a></li>
-          <li><a>CSS</a></li>
-          <li><a>JavaScript</a></li>
+          <li class="list-group-item" (click)="onSelect(account)" *ngFor="let data of accountList">{{account.number}}</li>
         </ul>
       </div>
 
@@ -81,9 +79,7 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <li><a>HTML</a></li>
-          <li><a>CSS</a></li>
-          <li><a>JavaScript</a></li>
+          <li class="list-group-item" (click)="onSelect(transaction)" *ngFor="let data of transactionList">{{transaction.reference}}</li>
         </ul>
       </div>
 

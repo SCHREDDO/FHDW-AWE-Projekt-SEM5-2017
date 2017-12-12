@@ -1,7 +1,9 @@
 package de.fhdw.group3.server.bank.server.rest;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -18,6 +20,7 @@ import org.apache.log4j.Logger;
 import com.sun.jersey.spi.resource.Singleton;
 
 import de.fhdw.group3.server.bank.controller.TransactionController;
+import de.fhdw.group3.server.bank.database.DBAccessJDBCSQLite;
 import de.fhdw.group3.server.bank.helper.ReturnResponse;
 import de.fhdw.group3.server.bank.model.Account;
 import de.fhdw.group3.server.bank.model.ListAccount;
@@ -135,9 +138,35 @@ public class RestResource {
 	@POST
 	@Path("/account/new")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response newAccount(@FormParam("owner") String owner, @FormParam("startAmount") BigDecimal startAmount) {
-		System.out.println(owner);
-		System.out.println(startAmount);
+	public Response newAccount(@FormParam("ownerStartAmount") String ownerStartAmount) {
+		System.out.println(ownerStartAmount);
+		
+		String[] parts = ownerStartAmount.split("-");		
+		String owner = parts[0];
+		BigDecimal startAmount = new BigDecimal(parts[1]);
+		
+		Account account = new Account();
+		String number = "";
+		
+		account.setNumber(number);
+		account.setOwner(owner);
+		
+		synchronized (DBAccessJDBCSQLite.class)
+		{
+			DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
+			db.connectTODB();
+			
+			Account bankAccount = db.getAccount("1000");
+			
+			db.newAccount(account);
+			account = db.getAccount(account.getNumber());
+			
+			Transaction transaction = new Transaction(0, bankAccount, account, startAmount, "START", new Date());
+			
+			db.newTransaction(transaction);
+			
+			db.disconnectFROMDB();
+		}
 		
 		return Response.ok().build();
 	}
@@ -145,9 +174,27 @@ public class RestResource {
 	@POST
 	@Path("/account/update")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response updateAccount(@FormParam("newOwner") String newOwner, @FormParam("number") String number) {
-		System.out.println(newOwner);
-		System.out.println(number);
+	public Response updateAccount(@FormParam("newOwnerNumber") String newOwnerNumber) {
+		System.out.println(newOwnerNumber);
+		
+		String[] parts = newOwnerNumber.split("-");		
+		String newOwner = parts[0];
+		String number = parts[1];
+		
+		Account account = new Account();
+		account.setOwner(newOwner);
+		account.setNumber(number);
+		
+		
+		synchronized (DBAccessJDBCSQLite.class)
+		{
+			DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
+			db.connectTODB();
+			
+			db.updateAccount(account);
+			
+			db.disconnectFROMDB();
+		}
 		
 		return Response.ok().build();
 	}
@@ -158,11 +205,20 @@ public class RestResource {
 	@GET
 	@Path("/account/all")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=utf-8"})
-	public Response getAllAccounts() {
+	public Response getAllAccounts(@PathParam("number") String number) {
+		System.out.println(number);
+		
 		ListAccount listAccount = new ListAccount();
-		listAccount.getAccounts().add(new Account("Test O1", "5555"));
+		/*listAccount.getAccounts().add(new Account("Test O1", "5555"));
 		listAccount.getAccounts().add(new Account("Test O2", "7777"));
-		listAccount.getAccounts().add(new Account("Test O3", "8888"));
+		listAccount.getAccounts().add(new Account("Test O3", "8888"));*/
+		DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
+		db.connectTODB();
+		
+		listAccount.setAccounts(db.getAccounts());
+		
+		db.disconnectFROMDB();
+		
 		
 		return Response.ok(listAccount).build();
 	}
@@ -177,10 +233,18 @@ public class RestResource {
 		System.out.println(number);
 		
 		ListTransaction listTransaction = new ListTransaction();
-		listTransaction.getTransactions().add(new Transaction(1, new Account("Test O1", "8888"), new Account("Test O2", "7777"), new BigDecimal(300.00), "Test T", new Date()));
+		/*listTransaction.getTransactions().add(new Transaction(1, new Account("Test O1", "8888"), new Account("Test O2", "7777"), new BigDecimal(300.00), "Test T", new Date()));
 		listTransaction.getTransactions().add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date()));
 		listTransaction.getTransactions().add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date()));
-		listTransaction.getTransactions().add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date()));
+		listTransaction.getTransactions().add(new Transaction(2, new Account("Test O3", "5555"), new Account("Test O4", "6666"), new BigDecimal(500.00), "Test T", new Date()));*/
+		
+		DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
+		db.connectTODB();
+		
+		listTransaction.setTransactions(db.getTransactions());
+		
+		db.disconnectFROMDB();
+		
 		
 		return Response.ok(listTransaction).build();
 	}

@@ -1,7 +1,7 @@
 interface Transaction {
     sender: Account;
     receiver: Account;
-    amount: string;
+    amount: number;
     reference: string;
     transactionDate: string;
 }

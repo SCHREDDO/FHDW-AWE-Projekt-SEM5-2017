@@ -6,8 +6,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,7 +186,7 @@ public class DBAccessJDBCSQLite {
 	 */
 	public List<Transaction> getTransactions() {
 		List<Transaction> traList = new ArrayList<Transaction>();
-		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, acs.owner, acs.number, acr.owner, acr.number FROM banktransaction t, account acs, account acr WHERE (acs.id = t.account_id_sender AND acr.id = t.account_id_receiver)";
+		String sql = "Select t.id, t.account_id_sender, t.account_id_receiver, t.amount, t.reference, t.transactionDate, acs.owner, acs.number, acr.owner, acr.number FROM banktransaction t, account acs, account acr WHERE (acs.id = t.account_id_sender AND acr.id = t.account_id_receiver) ORDER BY t.id DESC";
 		PreparedStatement statement;
 		
 		try {			
@@ -274,9 +272,8 @@ public class DBAccessJDBCSQLite {
 		try {			
 			statement = getDB().prepareStatement(sql);
 			
-			statement.setInt(1, account.getId());
-			statement.setString(2, account.getOwner());
-			statement.setString(3, account.getNumber());
+			statement.setString(1, account.getOwner());
+			statement.setString(2, account.getNumber());
 			
 			statement.execute();
 		} 
@@ -323,7 +320,7 @@ public class DBAccessJDBCSQLite {
 	 * @return
 	 */
 	public boolean updateAccount(Account account) {
-		String sql = "UPDATE account SET owner = ?, number = ? WHERE id = ?";
+		String sql = "UPDATE account SET owner = ? WHERE number = ?";
 		PreparedStatement statement;
 		
 		try {			
@@ -331,7 +328,6 @@ public class DBAccessJDBCSQLite {
 			
 			statement.setString(1, account.getOwner());
 			statement.setString(2, account.getNumber());
-			statement.setInt(3, account.getId());
 			
 			statement.execute();
 		} 

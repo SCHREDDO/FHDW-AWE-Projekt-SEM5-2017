@@ -36,7 +36,8 @@ public class TransactionController {
 		if (number.length() != 4 || !number.matches("[0-9]+")) {
 			return new ReturnResponse("400", acc);
 		}
-		
+		synchronized (DBAccessJDBCSQLite.class)
+		{
 		DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
 		db.connectTODB();
 		
@@ -58,6 +59,7 @@ public class TransactionController {
 		db.disconnectFROMDB();
 		
 		acc.setTransactions(traList);
+		}
 		
 		return new ReturnResponse("200", acc);
 	}
@@ -74,6 +76,8 @@ public class TransactionController {
 		//400 (Daten mit falschem Format etc., sonstige Client-seitige Fehler)
 		//404 (Account nicht gefunden)
 		//412 (Nicht genug Geld für Überweisung)
+		synchronized (DBAccessJDBCSQLite.class)
+		{
 		Transaction tra = new Transaction();
 		Account accSender = new Account();
 		Account accReceiver = new Account();
@@ -156,13 +160,14 @@ public class TransactionController {
 		
 		db.disconnectFROMDB();
 		System.out.println("10");
+		}
 		
 		return "200";
 	}
 }
 
 /*
-	synchronized (DemoClass.class)
+	synchronized (DBAccessJDBCSQLite.class)
 	{
 	    //other thread safe code
 	}
