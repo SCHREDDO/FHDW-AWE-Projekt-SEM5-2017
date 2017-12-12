@@ -7,7 +7,7 @@ export class DataService {
     constructor(private http: Http) {}
 
     getAccouts() {
-      return this.http.get('http://localhost:9998/rest/account/all/').map(
+      return this.http.get('http://localhost:9998/rest/account/all').map(
           (response: Response) => response.json()
       );
     }
@@ -17,7 +17,7 @@ export class DataService {
           (response: Response) => response.json()
       );
     }
-    
+
     sendNewAccount(newAccountOwner: string, newAccountstartAmount: string) {
       let headers = new Headers();
       headers.append('Content-Type', 'application/x-www-form-urlencoded');

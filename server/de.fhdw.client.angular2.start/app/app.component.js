@@ -21,13 +21,20 @@ var AppComponent = (function () {
         this.transactionData = { sender: { owner: "", number: "" }, receiver: { owner: "", number: "" }, amount: 0.00, reference: "", transactionDate: "" };
         this.newAccountOwner = "-";
         this.newAccountstartAmount = "-";
-        this.dataService.getAccouts().subscribe(function (account) { return _this.accountList.push(account); }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
-        this.dataService.getTransactions("all").subscribe(function (transactions) { return _this.transactionList.push(transactions); }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
+        this.listAccount = { accounts: [] };
+        this.listTransaction = { transactions: [] };
+        this.dataService.getAccouts().subscribe(function (listAccount) { return _this.listAccount = listAccount; }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
+        this.accountList = this.listAccount.accounts;
+        this.dataService.getTransactions("0").subscribe(function (listTransaction) { return _this.listTransaction = listTransaction; }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
+        this.transactionList = this.listTransaction.transactions;
     }
     AppComponent.prototype.newAccout = function () {
         var _this = this;
         this.dataService.sendNewAccount(this.newAccountOwner, this.newAccountstartAmount);
-        this.dataService.getAccouts().subscribe(function (account) { return _this.accountList.push(account); }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
+        this.dataService.getAccouts().subscribe(function (listAccount) { return _this.listAccount = listAccount; }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
+        //this.accountList = this.listAccount.accounts;
+        this.dataService.getTransactions("0").subscribe(function (listTransaction) { return _this.listTransaction = listTransaction; }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
+        //this.transactionList = this.listTransaction.transactions;
     };
     AppComponent.prototype.updateAccount = function () {
         this.dataService.sendUpdateAccout(this.accountData.number, this.accountData.owner);
@@ -35,7 +42,8 @@ var AppComponent = (function () {
     AppComponent.prototype.selectAccount = function (accoount) {
         var _this = this;
         this.accountData = accoount;
-        this.dataService.getTransactions(this.accountData.number).subscribe(function (transactions) { return _this.transactionList.push(transactions); }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
+        this.dataService.getTransactions(accoount.number).subscribe(function (listTransaction) { return _this.listTransaction = listTransaction; }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
+        //this.transactionList = this.listTransaction.transactions;
     };
     AppComponent.prototype.selectTransation = function (transaction) {
         this.transactionData = transaction;

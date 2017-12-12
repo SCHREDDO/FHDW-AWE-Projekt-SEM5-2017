@@ -15,28 +15,41 @@ export class AppComponent {
     newAccountOwner: string = "-";
     newAccountstartAmount: string = "-";
 
+    listAccount: ListAccount = {accounts: []};
+    listTransaction: ListTransaction = {transactions: []};
+
     constructor(private dataService : DataService) {
       this.dataService.getAccouts().subscribe(
-          (account: Account) => this.accountList.push(account),
+          (listAccount: ListAccount) => this.listAccount = listAccount,
           (error: Response) => console.log("Error: " + error.statusText),
           () => console.log("GetRequest sent")
       );
+      this.accountList = this.listAccount.accounts;
 
-      this.dataService.getTransactions("all").subscribe(
-          (transactions: Transaction) => this.transactionList.push(transactions),
+      this.dataService.getTransactions("0").subscribe(
+          (listTransaction: ListTransaction) => this.listTransaction = listTransaction,
           (error: Response) => console.log("Error: " + error.statusText),
           () => console.log("GetRequest sent")
       );
+      this.transactionList = this.listTransaction.transactions;
     }
 
     newAccout() {
       this.dataService.sendNewAccount(this.newAccountOwner, this.newAccountstartAmount);
 
       this.dataService.getAccouts().subscribe(
-          (account: Account) => this.accountList.push(account),
+          (listAccount: ListAccount) => this.listAccount = listAccount,
           (error: Response) => console.log("Error: " + error.statusText),
           () => console.log("GetRequest sent")
       );
+      //this.accountList = this.listAccount.accounts;
+
+      this.dataService.getTransactions("0").subscribe(
+          (listTransaction: ListTransaction) => this.listTransaction = listTransaction,
+          (error: Response) => console.log("Error: " + error.statusText),
+          () => console.log("GetRequest sent")
+      );
+      //this.transactionList = this.listTransaction.transactions;
     }
 
     updateAccount() {
@@ -46,11 +59,12 @@ export class AppComponent {
     selectAccount(accoount: Account) {
       this.accountData = accoount;
 
-      this.dataService.getTransactions(this.accountData.number).subscribe(
-          (transactions: Transaction) => this.transactionList.push(transactions),
+      this.dataService.getTransactions(accoount.number).subscribe(
+          (listTransaction: ListTransaction) => this.listTransaction = listTransaction,
           (error: Response) => console.log("Error: " + error.statusText),
           () => console.log("GetRequest sent")
       );
+      //this.transactionList = this.listTransaction.transactions;
     }
 
     selectTransation(transaction: Transaction) {

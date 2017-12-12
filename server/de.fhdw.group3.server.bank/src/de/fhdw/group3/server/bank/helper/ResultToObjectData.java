@@ -24,9 +24,9 @@ public class ResultToObjectData {
 		List<Account> accList = new ArrayList<Account>();
 		
 		try {			
-			while(rs.next()) {				
+			do  {			
 				accList.add(new Account(rs.getInt(1), rs.getString(2), rs.getString(3), new ArrayList<Transaction>()));
-			}
+			} while(rs.next());
 		} catch (Exception e) {
 			System.out.println("resultToAccount(ResultSet rs) | " + e);
 		}

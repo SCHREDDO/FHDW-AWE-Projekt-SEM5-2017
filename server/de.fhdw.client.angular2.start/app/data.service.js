@@ -17,7 +17,7 @@ var DataService = (function () {
         this.http = http;
     }
     DataService.prototype.getAccouts = function () {
-        return this.http.get('http://localhost:9998/rest/account/all/').map(function (response) { return response.json(); });
+        return this.http.get('http://localhost:9998/rest/account/all').map(function (response) { return response.json(); });
     };
     DataService.prototype.getTransactions = function (number) {
         return this.http.get('http://localhost:9998/rest/transaction/all/' + number).map(function (response) { return response.json(); });

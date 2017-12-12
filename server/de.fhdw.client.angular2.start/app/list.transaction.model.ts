@@ -1,0 +1,3 @@
+interface ListTransaction {
+    transactions: Transaction[];
+}

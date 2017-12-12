@@ -205,9 +205,7 @@ public class RestResource {
 	@GET
 	@Path("/account/all")
 	@Produces({ MediaType.APPLICATION_JSON + ";charset=utf-8"})
-	public Response getAllAccounts(@PathParam("number") String number) {
-		System.out.println(number);
-		
+	public Response getAllAccounts() {		
 		ListAccount listAccount = new ListAccount();
 		/*listAccount.getAccounts().add(new Account("Test O1", "5555"));
 		listAccount.getAccounts().add(new Account("Test O2", "7777"));
@@ -241,7 +239,12 @@ public class RestResource {
 		DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
 		db.connectTODB();
 		
-		listTransaction.setTransactions(db.getTransactions());
+		if (number.equals("0")) {
+			listTransaction.setTransactions(db.getTransactions());
+		} else {
+			Account account = db.getAccount(number);
+			listTransaction.setTransactions(db.getTransactionsFromAccount(account.getId()));
+		}
 		
 		db.disconnectFROMDB();
 		
