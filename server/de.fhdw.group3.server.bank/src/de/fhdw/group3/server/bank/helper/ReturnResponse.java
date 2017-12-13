@@ -1,5 +1,7 @@
 package de.fhdw.group3.server.bank.helper;
 
+import org.apache.log4j.Logger;
+
 import de.fhdw.group3.server.bank.model.*;
 
 /**

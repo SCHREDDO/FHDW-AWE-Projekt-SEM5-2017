@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import de.fhdw.group3.server.bank.helper.*;
 import de.fhdw.group3.server.bank.model.*;
 import de.fhdw.group3.server.bank.database.*;
@@ -13,7 +15,7 @@ import de.fhdw.group3.server.bank.database.*;
  *
  */
 public class TransactionController {
-	
+		
 	public static String newAccount() {
 		return "200";
 	}

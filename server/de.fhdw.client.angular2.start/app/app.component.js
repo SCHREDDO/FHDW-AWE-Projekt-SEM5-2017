@@ -35,6 +35,8 @@ var AppComponent = (function () {
         //this.accountList = this.listAccount.accounts;
         this.dataService.getTransactions("0").subscribe(function (listTransaction) { return _this.listTransaction = listTransaction; }, function (error) { return console.log("Error: " + error.statusText); }, function () { return console.log("GetRequest sent"); });
         //this.transactionList = this.listTransaction.transactions;
+        this.accountData.number = "2000";
+        this.accountData.owner = this.newAccountOwner;
     };
     AppComponent.prototype.updateAccount = function () {
         this.dataService.sendUpdateAccout(this.accountData.number, this.accountData.owner);

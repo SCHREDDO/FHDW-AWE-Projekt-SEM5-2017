@@ -7,7 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import de.fhdw.group3.server.bank.helper.ResultToObjectData;
 import de.fhdw.group3.server.bank.model.Account;
@@ -18,6 +21,8 @@ import de.fhdw.group3.server.bank.model.Transaction;
  *
  */
 public class DBAccessJDBCSQLite {
+	
+	private Logger logger = Logger.getLogger(getClass());
 
 	private String url = "jdbc:sqlite:/SQLite/database";
 	private Connection dB = null;
@@ -56,14 +61,13 @@ public class DBAccessJDBCSQLite {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			setDB(DriverManager.getConnection(getUrl()));
-
-			System.out.println("Connected to database.");
 		} catch (SQLException | ClassNotFoundException e) {
 			setSQLException(true);
-			System.out.println("connectTODB() | " + e);
+			logger.info("" + (new Date()) + ": " + "connectTODB(): Error(" + e + ")");
 			return false;
 		}
 
+		logger.info("" + (new Date()) + ": " + "connectTODB(): OK");
 		return true;
 	}
 	
@@ -75,8 +79,10 @@ public class DBAccessJDBCSQLite {
 			getDB().close();
 		} catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("disconnectFROMDB() | " + e);
+			logger.info("" + (new Date()) + ": " + "disconnectFROMDB(): Error(" + e + ")");
 		}
+		
+		logger.info("" + (new Date()) + ": " + "disconnectFROMDB(): OK");
 		return true;
 	}
 
@@ -89,10 +95,11 @@ public class DBAccessJDBCSQLite {
 			getDB().setAutoCommit(autoCommit);
 		} catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("setAutoCommit(boolean " + autoCommit + ") | " + e);
+			logger.info("" + (new Date()) + ": " + "setAutoCommit(autoCommit: " + autoCommit + "): Error(" + e + ")");
 			return false;
 		}
 
+		logger.info("" + (new Date()) + ": " + "setAutoCommit(autoCommit: " + autoCommit + "): OK");
 		return true;
 	}
 
@@ -104,10 +111,11 @@ public class DBAccessJDBCSQLite {
 			getDB().commit();
 		} catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("commit() | " + e);
+			logger.info("" + (new Date()) + ": " + "commit(): Error(" + e + ")");
 			return false;
 		}
 
+		logger.info("" + (new Date()) + ": " + "commit(): OK");
 		return true;
 	}
 
@@ -128,9 +136,10 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("getAccount(String " + number + ") | " + e);
+			logger.info("" + (new Date()) + ": " + "getAccount(number: " + number + "): Error(" + e + ")");
 		}
-
+		
+		logger.info("" + (new Date()) + ": " + "getAccount(number: " + number + "): OK");
 		return acc;
 	}
 
@@ -152,9 +161,10 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("getAccounts() | " + e);
+			logger.info("" + (new Date()) + ": " + "getAccounts(): Error(" + e + ")");
 		}
-
+		
+		logger.info("" + (new Date()) + ": " + "getAccounts(): OK");
 		return accList;
 	}
 
@@ -175,9 +185,10 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("getTransaction(int " + id + ") | " + e);
+			logger.info("" + (new Date()) + ": " + "getTransaction(id: " + id + "): Error(" + e + ")");
 		}
 		
+		logger.info("" + (new Date()) + ": " + "getTransaction(id: " + id + "): OK");
 		return tra;
 	}
 
@@ -197,9 +208,10 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("getTransactions() | " + e);
+			logger.info("" + (new Date()) + ": " + "getTransactions(): Error(" + e + ")");
 		}
 
+		logger.info("" + (new Date()) + ": " + "getTransactions(): OK");
 		return traList;
 	}
 
@@ -226,9 +238,10 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("getTransactionsFromAccount(int " + id + ") | " + e);
+			logger.info("" + (new Date()) + ": " + "getTransactionsFromAccount(id: " + id + "): Error(" + e + ")");
 		}
 
+		logger.info("" + (new Date()) + ": " + "getTransactionsFromAccount(id: " + id + "): OK");
 		return traList;
 	}
 	
@@ -255,9 +268,10 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println(e);
+			logger.info("" + (new Date()) + ": " + "getAccountBalance(number: " + number + "): Error(" + e + ")");
 		}
 		
+		logger.info("" + (new Date()) + ": " + "getAccountBalance(number: " + number + "): OK");
 		return accountBalance;
 	}
 	
@@ -279,10 +293,11 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("newAccount(Account " + account + ") | " + e);
+			logger.info("" + (new Date()) + ": " + "newAccount(Account): Error(" + e + ")");
 			return false;
 		}
 		
+		logger.info("" + (new Date()) + ": " + "newAccount(Account): OK");
 		return true;
 	}
 	
@@ -308,10 +323,11 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("newTransaction(Transaction " + transaction + ") | " + e);
+			logger.info("" + (new Date()) + ": " + "newTransaction(Transaction): Error(" + e + ")");
 			return false;
 		}
 		
+		logger.info("" + (new Date()) + ": " + "newTransaction(Transaction): OK");
 		return true;
 	}
 
@@ -333,10 +349,11 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("updateAccount(Account " + account + ") | " + e);
+			logger.info("" + (new Date()) + ": " + "updateAccount(Account): Error(" + e + ")");
 			return false;
 		}
 		
+		logger.info("" + (new Date()) + ": " + "updateAccount(Account): OK");
 		return true;
 	}
 
@@ -362,10 +379,11 @@ public class DBAccessJDBCSQLite {
 		} 
 		catch (SQLException e) {
 			setSQLException(true);
-			System.out.println("updateTransaction(Transaction " + transaction + ") | " + e);
+			logger.info("" + (new Date()) + ": " + "updateTransaction(Transaction): Error(" + e + ")");
 			return false;
 		}
 		
+		logger.info("" + (new Date()) + ": " + "updateTransaction(Transaction): OK");
 		return true;
 	}
 }

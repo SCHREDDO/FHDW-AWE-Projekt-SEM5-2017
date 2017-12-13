@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import de.fhdw.group3.server.bank.model.Account;
 import de.fhdw.group3.server.bank.model.Transaction;
 
@@ -28,6 +30,7 @@ public class ResultToObjectData {
 				accList.add(new Account(rs.getInt(1), rs.getString(2), rs.getString(3), new ArrayList<Transaction>()));
 			} while(rs.next());
 		} catch (Exception e) {
+			
 			System.out.println("resultToAccount(ResultSet rs) | " + e);
 		}
 		

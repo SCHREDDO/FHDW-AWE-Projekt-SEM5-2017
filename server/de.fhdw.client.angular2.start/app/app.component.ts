@@ -50,6 +50,9 @@ export class AppComponent {
           () => console.log("GetRequest sent")
       );
       //this.transactionList = this.listTransaction.transactions;
+
+      this.accountData.number = "2000";
+      this.accountData.owner = this.newAccountOwner;
     }
 
     updateAccount() {

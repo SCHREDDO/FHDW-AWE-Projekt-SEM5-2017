@@ -1,5 +1,7 @@
 package de.fhdw.group3.server.bank.server.main;
 
+import java.util.Date;
+
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
@@ -16,10 +18,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class JettyServer {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {		
 		Server server = new Server(9998);
 
 		// Log4J
@@ -30,6 +33,8 @@ public class JettyServer {
         logger.addAppender(appender);
         logger.addAppender(fileAppender);
         logger.setLevel(Level.ALL);
+        
+        logger.info("" + (new Date()) + ": " + "Server wird gestartet.");
 
 		// JERSEY
 		ResourceConfig resourceConfig = new PackagesResourceConfig("de.fhdw.group3.server.bank.server.rest");
