@@ -130,7 +130,7 @@ public class RestResource {
 		String owner = parts[0];
 		BigDecimal startAmount = new BigDecimal(parts[1]);
 		
-		if (owner.matches("[ a-zA-Z]*")) {
+		if (!owner.matches("[ a-zA-Z]*")) {
 			logger.info("" + (new Date()) + ": " + "newAccount(ownerStartAmount: " + ownerStartAmount + "): Error(400)");
 			return Response.ok().build();
 		}
@@ -178,12 +178,12 @@ public class RestResource {
 		String newOwner = parts[0];
 		String number = parts[1];
 		
-		if (newOwner.matches("[ a-zA-Z]*")) {
+		if (!newOwner.matches("[ a-zA-Z]*")) {
 			logger.info("" + (new Date()) + ": " + "");
 			return Response.ok().build();
 		}
 		
-		if (number.matches("[.0-9]*")) {
+		if (!number.matches("[.0-9]*")) {
 			logger.info("" + (new Date()) + ": " + "");
 			return Response.ok().build();
 		}

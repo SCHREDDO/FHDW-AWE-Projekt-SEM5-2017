@@ -51,7 +51,7 @@ export class AppComponent {
       );
       //this.transactionList = this.listTransaction.transactions;
 
-      this.accountData.number = "2000";
+      this.accountData.number = "1000";
       this.accountData.owner = this.newAccountOwner;
     }
 
