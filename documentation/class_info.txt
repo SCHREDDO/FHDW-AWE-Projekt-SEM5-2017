@@ -1,0 +1,33 @@
+TransactionController
+koordinirt den ablauf von abfragen und überprüft auf fehler seites des clients
+
+DBAccessJDBCSQLite
+datenbank verbinfungs classe
+
+ResultToObjectData
+wandelt datenbank rückgabe wert in objekte um
+
+
+ReturnResponse
+classe zum rückgeben eines fehlers/bestedigung das alles inortnungis und das eigendliche rügabe wert(Account)
+
+Account
+classe Account
+
+ListAccount
+classe ethalt liste von Account als objekt(für json)
+
+ListTransaction
+classe ethalt liste von Transaction als objekt(für json)
+
+Transaction 
+classe Transaction
+
+JettyServer
+start punkt des programms
+
+RestResource
+öffendliche schnittstellen
+
+JAXBContextResolver implements ContextResolver<JAXBContext>
+zuverfügung gestelte classe zum umwandel von Objekt in json
