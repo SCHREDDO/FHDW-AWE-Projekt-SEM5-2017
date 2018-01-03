@@ -28,8 +28,8 @@ import de.fhdw.group3.server.bank.model.ListTransaction;
 import de.fhdw.group3.server.bank.model.Transaction;
 
 /**
- * @author Admin
- *
+ * @author Sebastian Lühnen
+ * Schnitstellen
  */
 @Path("/")
 @Singleton
@@ -38,11 +38,10 @@ public class RestResource {
 	
 	//public interfaces
 	
-	// # = auskomentiren @ = einkoentiren | zum testen
-	
 	/**
 	 * @param number
-	 * @return
+	 * @return Response
+	 * Schikt Informationen zu einen Account zurück.
 	 */
 	@GET
 	@Path("/account/{number}/")
@@ -68,7 +67,8 @@ public class RestResource {
 	 * @param receiverNumber
 	 * @param amount
 	 * @param reference
-	 * @return
+	 * @return Response
+	 * Erstellt einen neue Transaction.
 	 */
 	@POST
 	@Path("/transaction")
@@ -78,11 +78,13 @@ public class RestResource {
 		String testString = amount;
 		BigDecimal bigDecimal;
 		
+		//Überprüft ob die werte einen Wert haben.
 		if (senderNumber.equals("") || receiverNumber.equals("") || amount.equals("") || reference.equals("")) {
 			logger.info("" + (new Date()) + ": " + "executeTransaction(senderNumber: " + senderNumber + ", receiverNumber: " + receiverNumber + ", amount: " + amount + ", reference: " + reference + "): Strat");
 			return Response.status(Response.Status.BAD_REQUEST).build(); //400
 		}
 		
+		//Überpruft ob einen Positive zahl und ob 2 Nachkommerstellen wenn Nachkommerstellen.
 		if ((((amount.indexOf('.') == (amount.length() - 3) && amount.length() >= 4)) || amount.indexOf('.') == -1 ) && (testString.matches("[.0-9]+"))) {
 			bigDecimal = new BigDecimal(amount);
 		} else {
@@ -90,6 +92,7 @@ public class RestResource {
 			return Response.status(Response.Status.BAD_REQUEST).build(); //400
 		}
 		
+		//Überprüft ob der Verwendungszweg aus vorgegebenen Zeichensatz besteht.
 		if (!reference.matches("[ a-zA-Z0-9]*")) {
 			logger.info("" + (new Date()) + ": " + "executeTransaction(senderNumber: " + senderNumber + ", receiverNumber: " + receiverNumber + ", amount: " + amount + ", reference: " + reference + "): Strat");
 			return Response.status(Response.Status.BAD_REQUEST).build(); //400
@@ -117,9 +120,9 @@ public class RestResource {
 	//Angular interfaces
 	
 	/**
-	 * @param owner
-	 * @param startAmount
-	 * @return
+	 * @param ownerStartAmount
+	 * @return Response
+	 * Erstellt einen neuen Account.
 	 */
 	@POST
 	@Path("/account/new")
@@ -130,6 +133,7 @@ public class RestResource {
 		String owner = parts[0];
 		BigDecimal startAmount = new BigDecimal(parts[1]);
 		
+		//Überprüft ob der Name aus vorgegebenen Zeichensatz besteht.
 		if (!owner.matches("[ a-zA-Z]*")) {
 			logger.info("" + (new Date()) + ": " + "newAccount(ownerStartAmount: " + ownerStartAmount + "): Error(400)");
 			return Response.ok().build();
@@ -138,6 +142,7 @@ public class RestResource {
 		Account account = new Account();
 		String number = "";
 		
+		//Erstellt Account + Setzt Startkapital.
 		synchronized (DBAccessJDBCSQLite.class)
 		{
 			DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
@@ -169,6 +174,11 @@ public class RestResource {
 		return Response.ok().build();
 	}
 	
+	/**
+	 * @param newOwnerNumber
+	 * @return Response
+	 * Editirt einen Account.
+	 */
 	@POST
 	@Path("/account/update")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -178,11 +188,13 @@ public class RestResource {
 		String newOwner = parts[0];
 		String number = parts[1];
 		
+		//Überprüft ob der Name aus vorgegebenen Zeichensatz besteht.
 		if (!newOwner.matches("[ a-zA-Z]*")) {
 			logger.info("" + (new Date()) + ": " + "");
 			return Response.ok().build();
 		}
 		
+		//Überprüft ob es einen Zahl ist.
 		if (!number.matches("[.0-9]*")) {
 			logger.info("" + (new Date()) + ": " + "");
 			return Response.ok().build();
@@ -192,7 +204,7 @@ public class RestResource {
 		account.setOwner(newOwner);
 		account.setNumber(number);
 		
-		
+		//Editirt Account.
 		synchronized (DBAccessJDBCSQLite.class)
 		{
 			DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
@@ -209,7 +221,8 @@ public class RestResource {
 	}
 	
 	/**
-	 * @return
+	 * @return Response
+	 * Gibt alle Account zurück.
 	 */
 	@GET
 	@Path("/account/all")
@@ -229,7 +242,9 @@ public class RestResource {
 	}
 	
 	/**
-	 * @return
+	 * @param number
+	 * @return Response
+	 * Gibt alle Transactionen bzw. eines Account zurück.
 	 */
 	@GET
 	@Path("/transaction/all/{number}")
@@ -241,6 +256,7 @@ public class RestResource {
 		DBAccessJDBCSQLite db = new DBAccessJDBCSQLite();
 		db.connectTODB();
 		
+		//Überprüft ob alle Transactionen zurück geschikt werden sollen.
 		if (number.equals("0")) {
 			listTransaction.setTransactions(db.getTransactions());
 		} else {

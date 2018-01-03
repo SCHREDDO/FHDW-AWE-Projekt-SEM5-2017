@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * @author Admin
- *
+ * @author Sebastian Lühnen
+ * Klasse Transaction beinhaltet Sender, Empfenger, Geld Mange, Verwendungszweck und Datum der Überweisung.
  */
 @XmlRootElement
 public class Transaction {
@@ -61,7 +61,7 @@ public class Transaction {
 	}
 
 	/**
-	 * 
+	 * Standardkonstruktor
 	 */
 	public Transaction() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -82,6 +82,7 @@ public class Transaction {
 	 * @param amount
 	 * @param reference
 	 * @param transactionDate
+	 * erweiterter Standardkonstruktor
 	 */
 	public Transaction(int id, Account sender,Account receiver, BigDecimal amount, String reference, Date transactionDate) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");

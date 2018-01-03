@@ -13,14 +13,15 @@ import de.fhdw.group3.server.bank.model.Account;
 import de.fhdw.group3.server.bank.model.Transaction;
 
 /**
- * @author Admin
- *
+ * @author Sebastian Lühnen
+ * Funktionen zum umwandel von SQL results in Objekte.
  */
 public class ResultToObjectData {
 	
 	/**
 	 * @param rs
-	 * @return
+	 * @return Liste von Accounts
+	 * Wandelt ein SQL Result in eine Liste von Accounts.
 	 */
 	public static List<Account> resultToAccount(ResultSet rs) {
 		List<Account> accList = new ArrayList<Account>();
@@ -43,7 +44,8 @@ public class ResultToObjectData {
 	
 	/**
 	 * @param rs
-	 * @return
+	 * @return Liste von Transactionen
+	 * Wandelt ein SQL Result in eine Liste von Transactionen.
 	 */
 	public static List<Transaction> resultToTransaction(ResultSet rs) {
 		List<Transaction> traList = new ArrayList<Transaction>();

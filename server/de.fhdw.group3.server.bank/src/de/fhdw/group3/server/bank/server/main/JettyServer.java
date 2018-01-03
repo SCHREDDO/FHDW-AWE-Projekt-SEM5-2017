@@ -20,8 +20,17 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
+/**
+ * @author Sebastian Lühnen
+ * 
+ */
 public class JettyServer {
 
+	/**
+	 * @param args
+	 * @throws Exception
+	 * Der Server wird gestartet so wie Port und Adresse werden festgelegt.
+	 */
 	public static void main(String[] args) throws Exception {		
 		Server server = new Server(9998);
 

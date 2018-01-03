@@ -6,8 +6,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @author Admin
- *
+ * @author Sebastian Lühnen
+ * Wrapper Klasse für die versendung von mehren Transactionen.
  */
 @XmlRootElement
 public class ListTransaction {
@@ -22,7 +22,7 @@ public class ListTransaction {
 	}
 	
 	/**
-	 * 
+	 * Standardkonstruktor
 	 */
 	public ListTransaction() {
 		this.transactions = new ArrayList<Transaction>();

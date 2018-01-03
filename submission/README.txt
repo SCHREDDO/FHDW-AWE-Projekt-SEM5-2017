@@ -11,6 +11,3 @@ sql_script.txt: verwendetes Scrip zur erstellung
 - Kopiren der server.jar auf den PC sow wie de.fhdw.client.angular2.start in das selbe verzeichnis
 - server.jar ausführen(Java 8 wird empfohlen).
 - Weboberfläche ist unter der Adresse erreichbar http://localhost:9998/angular.
-
-wenn probleme bei verbinden mit der datenbank auftreten im server projekt 
-ligt die verwendete library an bei(sqlite-jdbc-3.7.2.jar).

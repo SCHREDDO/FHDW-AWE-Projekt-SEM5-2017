@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * @author Admin
- *
+ * @author Sebastian Lühnen
+ * Klasse Account beinhaltet ID, Besitzer, Kontonummer und Liste von allen Transaction.
  */
 @XmlRootElement
 public class Account {
@@ -45,7 +45,7 @@ public class Account {
 	}
 
 	/**
-	 * 
+	 * Standardkonstruktor
 	 */
 	public Account() {
 		setId(0);
@@ -57,6 +57,7 @@ public class Account {
 	/**
 	 * @param owner
 	 * @param number
+	 * erweiterter Standardkonstruktor
 	 */
 	public Account(String owner, String number) {
 		setOwner(owner);
@@ -68,6 +69,7 @@ public class Account {
 	 * @param owner
 	 * @param number
 	 * @param transactions
+	 * erweiterter Standardkonstruktor
 	 */
 	public Account(int id, String owner, String number, List<Transaction> transactions) {
 		setId(id);

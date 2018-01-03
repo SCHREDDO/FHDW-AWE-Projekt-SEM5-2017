@@ -5,8 +5,8 @@ import org.apache.log4j.Logger;
 import de.fhdw.group3.server.bank.model.*;
 
 /**
- * @author Admin
- *
+ * @author Sebastian Lühnen
+ * Klasse zum übermittel eines Account und eines Fehler Codes bzw. Erfolgs Code.
  */
 public class ReturnResponse {
 	
@@ -23,6 +23,7 @@ public class ReturnResponse {
 	/**
 	 * @param error
 	 * @param account
+	 * erweiterter Standardkonstruktor
 	 */
 	public ReturnResponse(String error, Account account) {
 		this.error = error;

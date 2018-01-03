@@ -6,8 +6,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @author Admin
- *
+ * @author Sebastian Lühnen
+ * Wrapper Klasse für die versendung von mehren Accounts.
  */
 @XmlRootElement
 public class ListAccount {
@@ -21,7 +21,7 @@ public class ListAccount {
 	}
 
 	/**
-	 * 
+	 * Standardkonstruktor
 	 */
 	public ListAccount() {
 		this.accounts = new ArrayList<>();

@@ -17,8 +17,8 @@ import de.fhdw.group3.server.bank.model.Account;
 import de.fhdw.group3.server.bank.model.Transaction;
 
 /**
- * @author Admin
- *
+ * @author Sebastian Lühnen
+ * Klassen zum handel der Datenbank verbindung.
  */
 public class DBAccessJDBCSQLite {
 	
@@ -48,14 +48,15 @@ public class DBAccessJDBCSQLite {
 	}
 	
 	/**
-	 * 
+	 * Standardkonstruktor
 	 */
 	public DBAccessJDBCSQLite() {
 		setSQLException(false);
 	}
 
 	/**
-	 * @return
+	 * @return true wenn die Verbindung eingerichtet ist false wenn nicht.
+	 * Stellt Verbindung mit der Datenbank her.
 	 */
 	public Boolean connectTODB() {
 		try {
@@ -72,7 +73,7 @@ public class DBAccessJDBCSQLite {
 	}
 	
 	/**
-	 * @return
+	 * @return true wenn die Beendet ist false wenn nicht.
 	 */
 	public boolean disconnectFROMDB() {
 		try {
@@ -88,7 +89,8 @@ public class DBAccessJDBCSQLite {
 
 	/**
 	 * @param autoCommit
-	 * @return
+	 * @return true wenn es funktionirt false wenn nicht.
+	 * Begint ein Commit
 	 */
 	public boolean setAutoCommit(boolean autoCommit) {
 		try {
@@ -104,7 +106,8 @@ public class DBAccessJDBCSQLite {
 	}
 
 	/**
-	 * @return
+	 * @return true wenn es funktionirt false wenn nicht.
+	 * Commited Befehle
 	 */
 	public boolean commit() {
 		try {
@@ -121,7 +124,8 @@ public class DBAccessJDBCSQLite {
 
 	/**
 	 * @param number
-	 * @return
+	 * @return Account
+	 * Sucht Account mit Nummer X.
 	 */
 	public Account getAccount(String number) {
 		Account acc = new Account();
@@ -144,7 +148,8 @@ public class DBAccessJDBCSQLite {
 	}
 
 	/**
-	 * @return
+	 * @return Liste von Accounts
+	 * Gibt alle Accounts zurück.
 	 */
 	public List<Account> getAccounts() {
 		List<Account> accList = new ArrayList<Account>();
@@ -170,7 +175,8 @@ public class DBAccessJDBCSQLite {
 
 	/**
 	 * @param id
-	 * @return
+	 * @return Transaction
+	 * Sucht eine Transaction bei der ID.
 	 */
 	public Transaction getTransaction(int id) {
 		Transaction tra = new Transaction();
@@ -193,7 +199,8 @@ public class DBAccessJDBCSQLite {
 	}
 
 	/**
-	 * @return
+	 * @return Liste von Transaction.
+	 * Gibt alle Transaction zurück.
 	 */
 	public List<Transaction> getTransactions() {
 		List<Transaction> traList = new ArrayList<Transaction>();
@@ -217,7 +224,8 @@ public class DBAccessJDBCSQLite {
 
 	/**
 	 * @param id
-	 * @return
+	 * @return Liste von Transaction.
+	 * Gibt alle Transaction eines Accounts zurück.
 	 */
 	public List<Transaction> getTransactionsFromAccount(int id) {
 		List<Transaction> traList = new ArrayList<Transaction>();
@@ -247,7 +255,8 @@ public class DBAccessJDBCSQLite {
 	
 	/**
 	 * @param number
-	 * @return
+	 * @return BigDecimal
+	 * Gibt den Kontostand einens Account zurück.
 	 */
 	public BigDecimal getAccountBalance(String number) {
 		BigDecimal accountBalance = new BigDecimal(0.0);;
@@ -277,7 +286,8 @@ public class DBAccessJDBCSQLite {
 	
 	/**
 	 * @param account
-	 * @return
+	 * @return true wenn es funktionirt false wenn nicht.
+	 * Erstzellt einen neuen Account.
 	 */
 	public boolean newAccount(Account account) {
 		String sql = "INSERT INTO account (owner, number) VALUES (?, ?)";
@@ -303,7 +313,8 @@ public class DBAccessJDBCSQLite {
 	
 	/**
 	 * @param transaction
-	 * @return
+	 * @return true wenn es funktionirt false wenn nicht.
+	 * Erstellt eine neue Transaction.
 	 */
 	public boolean newTransaction(Transaction transaction) {
 		String sql = "INSERT INTO banktransaction (account_id_sender, account_id_receiver, amount, reference, transactionDate) VALUES (?, ?, ?, ?, ?)";
@@ -333,7 +344,8 @@ public class DBAccessJDBCSQLite {
 
 	/**
 	 * @param account
-	 * @return
+	 * @return true wenn es funktionirt false wenn nicht.
+	 * Editirt einen Account.
 	 */
 	public boolean updateAccount(Account account) {
 		String sql = "UPDATE account SET owner = ? WHERE number = ?";
@@ -359,7 +371,8 @@ public class DBAccessJDBCSQLite {
 
 	/**
 	 * @param transaction
-	 * @return
+	 * @return true wenn es funktionirt false wenn nicht.
+	 * Editirt einen Transaction.
 	 */
 	public boolean updateTransaction(Transaction transaction) {
 		String sql = "UPDATE banktransaction SET account_id_sender = ?, account_id_receiver = ?, amount = ?, reference = ?, transactionDate = ? WHERE id = ?";
