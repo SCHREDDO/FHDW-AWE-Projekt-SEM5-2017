@@ -3,7 +3,7 @@ server.jar: server anwendung
 de.fhdw.client.angular2.start: angular weboberfläche
 : app
 database: die SQLite Datenbank
-SQLScript.txt: verwendetes Scrip zur erstellung
+sql_script.txt: verwendetes Scrip zur erstellung
 *.png: Screenshots der laufenden Anwendung
 
 - Die Datei database in den Ordner /SQLite plaziren.
