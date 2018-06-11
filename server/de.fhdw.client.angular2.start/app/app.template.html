@@ -1,0 +1,159 @@
+//Author: Sebastian Lühnen
+<div class="container">
+  <!-- 0 -->
+  <div class="row">
+    <div class="col">
+      <h1><b>Bank Verwaltungsoberfläche</b></h1>
+    </div>
+  </div>
+
+  <!-- 1 -->
+  <div class="row">
+    <div class="col">
+      <hr/>
+      <h2>Übersicht</h2>
+      <hr/>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="row">
+    <div class="col">
+      <h3>Account Übersicht</h3>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="row">
+    <div class="col">
+
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Accounts
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li class="list-group-item" (click)="onSelect(account)" *ngFor="let data of accountList">{{account.number}}</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="col">
+
+      <h5><b>Account Nummer: </b>{{accountData.number}}</h5>
+
+    </div>
+    <div class="col">
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col">
+
+      <input class="form-control" [(ngModel)]="accountData.owner">
+
+    </div>
+    <div class="col">
+
+      <button class="btn btn-primary" (click)="updateAccount()">Account updaten</button>
+
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="row">
+    <div class="col">
+
+      <h3>Transactions Übersicht</h3><h5>(<b>Transactions von Account: </b>{{accountData.number}})</h5>
+
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="row">
+    <div class="col">
+
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Transactions
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li class="list-group-item" (click)="onSelect(transaction)" *ngFor="let data of transactionList">{{transaction.reference}}</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="col">
+
+      <h5>Sender Nummer: {{transactionData.sender.number}} ({{transactionData.sender.owner}})</h5>
+
+    </div>
+    <div class="col">
+
+      <h5>Empfenger Nummer: {{transactionData.sender.number}} ({{transactionData.sender.owner}}</h5>
+
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col">
+
+      <h5>Datum: {{transactionData.transactionDate}}</h5>
+
+    </div>
+    <div class="col">
+
+      <h5>Betrack: {{transactionData.amount}}</h5>
+
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="row">
+    <div class="col">
+      <hr/>
+      <h2>Neuer Account</h2>
+      <hr/>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="row">
+    <div class="col">
+
+      <b>Besitzer</b>
+
+    </div>
+    <div class="col">
+
+      <b>Startkapital</b>
+
+    </div>
+    <div class="col">
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="row">
+    <div class="col">
+
+      <input class="form-control" [(ngModel)]="newAccountOwner">
+
+    </div>
+    <div class="col">
+
+      <input class="form-control" [(ngModel)]="newAccountstartAmount">
+
+    </div>
+    <div class="col">
+
+      <button class="btn btn-primary" (click)="newAccout()">Account erstellen</button>
+
+    </div>
+  </div>
+</div>
